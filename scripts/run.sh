@@ -45,6 +45,7 @@ train() {
 }
 
 build() {
+  mkdir -p models
   say "собираю архив на 8 слоёв"
   NEEDLE_TELEMETRY=0 .venv/bin/needle build checkpoints/needle3.safetensors \
     --lora checkpoints/router_lora.safetensors --layers 8 --out models/router.cact
@@ -52,6 +53,7 @@ build() {
 }
 
 evaluate() {
+  mkdir -p reports
   say "оцениваю на отложенных диалогах"
   PYTHONPATH=src NEEDLE_TELEMETRY=0 .venv/bin/python -m router.cli eval \
     ${1:+--weights "$1"} --out reports/eval.json

@@ -1,0 +1,1037 @@
+[
+  {
+    "name": "book_explain",
+    "description": "Generate an interactive HTML explanation for an Obsidian book section",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "book_transform",
+    "description": "Transform a PDF book or paper into a structured Obsidian reading vault",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "coding",
+    "description": "Write application code in the project's existing forms",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "architect",
+    "description": "Sketch types, signatures, and module structure before code, then stay in the loop while implementation fills in",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "figure_it_out",
+    "description": "Design an auditable playbook when no narrower one fits: a large migration, an ambitious multi-part change, or work a human reviews after stepping away",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "improve_codebase_architecture",
+    "description": "Scan a codebase for deepening opportunities, present them as a visual HTML report, then grill through whichever one you pick.",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "mental_model",
+    "description": "Keep a working model of architecture, behavior, and design choices in view while editing",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "research",
+    "description": "Investigate a question against high-trust primary sources and capture the findings as a Markdown file in the repo",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "wayfinder",
+    "description": "Plan a huge chunk of work (more than one agent session can hold) as a shared map of decision tickets on your issue tracker, and resolve them one at a time until…",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "no_comments",
+    "description": "Spawn Comment Sicko, fix accepted findings, and offer encodings for claimed constraints.",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "solve_bugs",
+    "description": "Reproduce a bug, fix the root cause, and check what else the same change breaks",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "tdd",
+    "description": "Use only when the user explicitly asks for TDD, a failing test, or a regression test, OR when the bug has an obvious cheap local test target",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "ios_app_intents",
+    "description": "Design App Intents, app entities, and App Shortcuts for iOS system surfaces",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "ios_debugger_agent",
+    "description": "Build, run, and debug iOS apps on Simulator with XcodeBuildMCP",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "ios_ettrace_performance",
+    "description": "Capture and interpret iOS Simulator ETTrace profiles",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "ios_memgraph_leaks",
+    "description": "Capture and inspect iOS leaks and memgraphs",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "ios_simulator_browser",
+    "description": "Mirror an iOS Simulator into the Codex in-app browser and render SwiftUI previews from importable Swift packages in that simulator with hot reload",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "swiftui_liquid_glass",
+    "description": "Implement and review iOS 26+ SwiftUI Liquid Glass UI",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "swiftui_performance_audit",
+    "description": "Audit SwiftUI runtime performance from code first",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "swiftui_ui_patterns",
+    "description": "Build and refactor SwiftUI UI with component patterns and examples",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "swiftui_view_refactor",
+    "description": "Refactor SwiftUI view files into stable, testable structure",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "appkit_interop",
+    "description": "Bridge macOS SwiftUI into AppKit narrowly",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "build_run_debug",
+    "description": "Build, run, and debug macOS apps with shell-first Xcode and Swift workflows",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "liquid_glass",
+    "description": "Implement and review macOS SwiftUI Liquid Glass UI",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "packaging_notarization",
+    "description": "Prepare macOS packaging and notarization workflows",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "signing_entitlements",
+    "description": "Inspect macOS signing, entitlements, and Gatekeeper issues",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "swiftpm_macos",
+    "description": "Build, run, and test SwiftPM macOS packages and executables",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "swiftui_patterns",
+    "description": "Build macOS SwiftUI scenes and components with desktop patterns",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "telemetry",
+    "description": "Add and verify lightweight macOS runtime telemetry",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "test_triage",
+    "description": "Triage macOS tests across Xcode and SwiftPM",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "view_refactor",
+    "description": "Refactor macOS SwiftUI views and scenes into stable structure",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "window_management",
+    "description": "Customize macOS SwiftUI windows and scene behavior",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "create_verification_skill",
+    "description": "Generate a project-local verification skill that drives your app the way a user does — any language, framework, or platform",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "lint",
+    "description": "Run installed linters on Python or Swift, fix what is safe, report conflicts between linters and user requirements",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "maintain_verification_skill",
+    "description": "Periodic pass that keeps a project's verification skill and feature map honest: parallel source readers per feature, one live session driving every feature, at…",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "principle_prove_it_works",
+    "description": "Apply after completing a task, before declaring done",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "two_pass_review",
+    "description": "Two-pass review of a branch: bugs, security, and correctness first, then maintainability (file size, spaghetti, code judo)",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "software_developer",
+    "description": "Build software together in dialogue, incrementally and out loud, in ONE rigid architecture",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "visualize_codebase",
+    "description": "Interactive codebase graphs from code_model.json: Call graph, Activity (HTTP lifecycle with collapse/expand), UI flow, snippets, agent-delta highlight",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "frontend_app_builder",
+    "description": "Use for new frontend applications, dashboards, games, creative websites, hero sections, and visually driven UI from scratch, or when the user explicitly asks fo…",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "frontend_testing_debugging",
+    "description": "Use when testing, debugging, or making targeted improvements to rendered frontend apps through the Build Web Apps or web dev plugin: local dev servers, UI regre…",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "make_interfaces_feel_better",
+    "description": "Design engineering principles for making interfaces feel polished",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "react_best_practices",
+    "description": "React and Next.js performance optimization guidelines from Vercel Engineering",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "shadcn",
+    "description": "Manages shadcn components and projects — adding, searching, fixing, debugging, styling, and composing UI",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "stripe_best_practices",
+    "description": "Guides Stripe integration decisions — API selection (Checkout Sessions vs PaymentIntents), Connect platform setup (Accounts v2, controller properties), billing/…",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "supabase_postgres_best_practices",
+    "description": "Postgres performance optimization and best practices from Supabase",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "typescript_best_practices",
+    "description": "TypeScript best practices",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "userinterface_wiki",
+    "description": "UI/UX best practices for web interfaces",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "documents",
+    "description": "Create, edit, redline, and comment on `.docx`, Word, and Google Docs-targeted document artifacts inside the container, with a strict render-and-verify workflow",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "pdf",
+    "description": "Use when tasks involve reading, creating, or reviewing PDF files where rendering and layout matter; prefer visual checks by rendering pages (Poppler) and use Py…",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "how",
+    "description": "Walk through how a subsystem runs: call chain, ownership, layering, and where a change should live",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "teach_code",
+    "description": "Turn a how-walkthrough and a why-trail into one plain explanation a person can keep",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "why",
+    "description": "Recover why a design exists: cited decisions, tradeoffs, regressions, postmortems, and data-backed thresholds",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "bro",
+    "description": "Restate the last message in plain human language, with no jargon.",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "wait_what",
+    "description": "Stop",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "large_session",
+    "description": "Default mode for mixed work: split the user message into markdown tasks, write into the chosen destination (Obsidian vault folder or notes/ at the root of the o…",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "lessons",
+    "description": "Turn a repeated correction into a repo mechanism, mine chats into AGENTS.md, or capture working style as a -mode skill",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "alphaxiv_paper_lookup",
+    "description": "Look up any arxiv paper on alphaxiv.org to get a structured AI-generated overview",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "hf_cli",
+    "description": "Hugging Face Hub CLI (`hf`) for downloading, uploading, and managing models, datasets, spaces, buckets, repos, papers, jobs, and more on the Hugging Face Hub",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "huggingface_best",
+    "description": "Use when the user asks about finding the best, top, or recommended model for a task, wants to know what AI model to use, or wants to compare models by benchmark…",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "huggingface_community_evals",
+    "description": "Run evaluations for Hugging Face Hub models using inspect-ai and lighteval on local hardware",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "huggingface_datasets",
+    "description": "Use this skill for Hugging Face Dataset Viewer API workflows that fetch subset/split metadata, paginate rows, search text, apply filters, download parquet URLs…",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "huggingface_gradio",
+    "description": "Build Gradio web UIs and demos in Python",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "huggingface_jobs",
+    "description": "This skill should be used when users want to run any workload on Hugging Face Jobs infrastructure",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "huggingface_llm_trainer",
+    "description": "Train or fine-tune language and vision models using TRL (Transformer Reinforcement Learning) or Unsloth with Hugging Face Jobs infrastructure",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "huggingface_local_models",
+    "description": "Use to select models to run locally with llama.cpp and GGUF on CPU, Mac Metal, CUDA, or ROCm",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "huggingface_lora_space_builder",
+    "description": "Build and publish a Gradio demo on Hugging Face Spaces for a user-provided LoRA",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "huggingface_paper_publisher",
+    "description": "Publish and manage research papers on Hugging Face Hub",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "huggingface_papers",
+    "description": "Look up and read Hugging Face paper pages in markdown, and use the papers API for structured metadata such as authors, linked models/datasets/spaces, Github rep…",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "huggingface_spaces",
+    "description": "Build, deploy, and maintain applications on Hugging Face Spaces — Gradio / Docker / Static SDKs, ZeroGPU and dedicated hardware, model loading, debugging, bucke…",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "huggingface_tool_builder",
+    "description": "Use this skill when the user wants to build tool/scripts or achieve a task where using data from the Hugging Face API would help",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "huggingface_trackio",
+    "description": "Track and visualize ML training experiments with Trackio",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "huggingface_vision_trainer",
+    "description": "Trains and fine-tunes vision models for object detection (D-FINE, RT-DETR v2, DETR, YOLOS), image classification (timm models — MobileNetV3, MobileViT, ResNet…",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "huggingface_zerogpu",
+    "description": "AI demos and GPU compute with Gradio Spaces and Hugging Face Spaces ZeroGPU",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "train_sentence_transformers",
+    "description": "Train or fine-tune sentence-transformers models across `SentenceTransformer` (bi-encoder; dense or static embedding model; for retrieval, similarity, clustering…",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "transformers_js",
+    "description": "Use Transformers.js to run state-of-the-art machine learning models directly in JavaScript/TypeScript",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "trl_training",
+    "description": "Train and fine-tune transformer language models using TRL (Transformers Reinforcement Learning)",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "innopolis_a100_queue",
+    "description": "Prepare, launch, archive, and monitor Git-backed training code on Innopolis A100 workers through ClearML while respecting shared queues, GPU allocations, storag…",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "jupyter_notebook",
+    "description": "Use when the user asks to create, scaffold, or edit Jupyter notebooks (`.ipynb`) for experiments, explorations, or tutorials; prefer the bundled templates and r…",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "paper_writer",
+    "description": "Adds IEEE structure to AI/ML research papers: section order and rhetoric, contributions, related-work framing, citations, submission checklist, and camera-ready…",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "research_figures",
+    "description": "Camera-ready matplotlib or TikZ figures for a paper: final print size, vector export, caption as title, uncertainty, greyscale-safe color",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "research_scripts",
+    "description": "Write experiment, training, and model code in a research repo",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "visualize_ml",
+    "description": "Live visualizations while the work is running: architecture parsed from the Python in front of you, tensors drawn as numbered grids and 3D stacks, operations as…",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "secretary",
+    "description": "Work with this Mac's Apple apps through one route each — Reminders through RemCTL, Notes through apple-notes, Photos through osxphotos, and Calendar, Contacts…",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "dia_context",
+    "description": "Read Dia profile tabs and saved bookmark folders from local files, returning only matching context.",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "handoff",
+    "description": "Compact the current conversation into a handoff document for the next agent",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "session_resume",
+    "description": "Bootstrap a new chat on an already-open project: read notes/, search prior chats, skim the latest transcript",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "math_trainer",
+    "description": "Drill a new math technique from a paper or proof: pick a problem from a real problem book, wait for an attempt, then explain why this algebraic step and not ano…",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "study",
+    "description": "Teaching-assistant support for coursework: explanation-first, no full solutions",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "teach",
+    "description": "Teach a new skill or concept inside this workspace with retrieval from project files",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "text_to_lottie",
+    "description": "Author a Lottie (Bodymovin) JSON animation that renders in a local skia player",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "accessibility_and_inclusive_visualization",
+    "description": "Make data visualizations accessible and inclusive",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "canvas2d_data_visualization",
+    "description": "Render data visualizations with Canvas2D",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "d3_data_visualization",
+    "description": "Build custom data visualizations with D3",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "dashboards_and_real_time_visualization",
+    "description": "Design dashboards and live visualization systems",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "gantt_chart_visualization",
+    "description": "Design, critique, route, and implement Gantt charts and schedule visualizations",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "geospatial_and_cartographic_visualization",
+    "description": "Design geospatial and cartographic visualizations",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "grammar_of_graphics_and_declarative_visualization",
+    "description": "Build data visualizations with declarative grammars",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "html_visualization",
+    "description": "Write HTML visualizations: composition, SVG/D3, mockups, accessibility",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "node_link_and_diagram_layout",
+    "description": "Choose and apply automatic layout strategies for node-link diagrams and connected-node visuals",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "react_and_nextjs_data_visualization",
+    "description": "Integrate data visualizations into React and Next.js applications",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "reports_pdfs_and_slide_automation",
+    "description": "Lay out and export data-rich reports and documents",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "scrollytelling_and_parallax_data_visualization",
+    "description": "Design and implement parallax scrolling and scrollytelling data visualizations",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "statistical_and_uncertainty_visualization",
+    "description": "Design statistically honest and uncertainty-aware visualizations",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "testing_data_visualizations",
+    "description": "Test data visualizations and dashboards",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "threejs_data_visualization",
+    "description": "Render WebGL-accelerated data visualizations with Three.js, raw WebGL, deck.gl, luma.gl, PixiJS, Sigma.js, Plotly WebGL traces, ECharts GL, CesiumJS, Babylon.js…",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "typescript_data_visualization_engineering",
+    "description": "Build typed data visualizations in TypeScript",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "uml_and_software_architecture_visualization",
+    "description": "Design, critique, read, write, render, and implement UML and UML-like software diagrams",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "visualization_strategy_and_critique",
+    "description": "Choose, lay out, critique, and explain data visualizations",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "detect_ai_slop",
+    "description": "Use when the user wants to SEE which AI tells are in a piece of text without rewriting it",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "remove_ai_slop",
+    "description": "Use when the user pastes text and asks to make it \"less AI\", \"less ChatGPT\", \"less slop\", \"more human\", \"humanize\", \"de-slop\", \"de-AI\", \"edit out the AI tells\"…",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "score_ai_slop",
+    "description": "Use when the user wants a slop quality-pass rather than a rewrite or a located list",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "prose",
+    "description": "Writes and edits documents that other people read, under one standard for reports and research papers alike: a ledger of sources and user corrections, sentence-…",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "technical_writing",
+    "description": "Layered technical-writing standard: Diátaxis structure, Google developer style sentences, STE instruction rules, Global English syntax",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  },
+  {
+    "name": "unslop",
+    "description": "Governs the agent's own replies to the user and agent-read text such as skills and handoff notes: the AI-tell catalog, sentence rules, and a standing list of th…",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "required": []
+    }
+  }
+]

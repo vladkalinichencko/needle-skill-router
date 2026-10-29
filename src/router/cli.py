@@ -86,7 +86,9 @@ def cmd_eval(args: argparse.Namespace) -> None:
     )
     print(json.dumps(report, ensure_ascii=False, indent=2))
     if args.out:
-        Path(args.out).write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        target = Path(args.out)
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
 
 def cmd_eda(args: argparse.Namespace) -> None:

@@ -9,7 +9,6 @@ data/processed/turns.jsonl
 checkpoints/
 models/
 reports/
-artifacts/
 
 *.cact
 *.safetensors
