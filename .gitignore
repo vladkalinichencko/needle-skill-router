@@ -1,0 +1,17 @@
+.venv/
+.venv-gpu/
+__pycache__/
+*.pyc
+.DS_Store
+
+data/raw/
+data/processed/turns.jsonl
+checkpoints/
+models/
+reports/
+artifacts/
+
+*.cact
+*.safetensors
+.gigatool/
+data/processed/manifest.json
