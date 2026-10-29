@@ -23,9 +23,9 @@ gpu_memory_mib() {
 pick_batch() {
   local mib="${BATCH:-0}"
   if [ "$mib" != "0" ]; then BATCH="$mib"; return; fi
-  if ! gpu_present; then BATCH=16; note "карты нет, батч $BATCH"; return; fi
+  if ! gpu_present; then BATCH=8; note "карты нет, батч $BATCH"; return; fi
   mib="$(gpu_memory_mib)"
-  if [ -z "$mib" ]; then BATCH=16; note "объём памяти не определился, батч $BATCH"; return; fi
+  if [ -z "$mib" ]; then BATCH=8; note "объём памяти не определился, батч $BATCH"; return; fi
   if [ "$mib" -ge 70000 ]; then
     BATCH=16
   elif [ "$mib" -ge 30000 ]; then
