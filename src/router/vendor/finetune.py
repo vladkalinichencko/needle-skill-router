@@ -1,6 +1,7 @@
 import concurrent.futures
 import json
 import os
+from collections import Counter
 
 from needle.model.checkpoints import write_adapter
 import sys
@@ -281,12 +282,33 @@ def fit_max_len(path, tokenizer, cap):
 
 
 def load_jsonl(path, tokenizer, max_len):
-    seqs, masks = [], []
+    seqs, masks, examples = [], [], []
     for example in read_examples(path, report=True):
         ids, mask = _encode(tokenizer, example, max_len)
         seqs.append(ids)
         masks.append(mask)
-    return np.array(seqs, np.int32), np.array(masks, np.float32)
+        examples.append(example)
+    return np.array(seqs, np.int32), np.array(masks, np.float32), examples
+
+
+def class_counts(examples):
+    return Counter(a["name"] for example in examples for a in example.get("answers", []))
+
+
+def class_weights(examples, counts):
+    """Per-example inverse-sqrt frequency of its answer classes; refusals (no answers) weigh 1.
+
+    Keeps the 40%-dominant class from making every other class cheaper to miss than to ignore.
+    """
+    if not examples:
+        return np.zeros(0, np.float32)
+    freq = np.array([
+        np.mean([counts.get(name, 0) or 1 for name in (a["name"] for a in example.get("answers", []))])
+        if example.get("answers") else 1.0
+        for example in examples
+    ], np.float32)
+    weights = 1.0 / np.sqrt(freq)
+    return (weights * len(weights) / weights.sum()).astype(np.float32)
 
 
 
@@ -357,8 +379,8 @@ def _calls_of(text):
             for c in calls if isinstance(c, dict)]
 
 
-def _score_quantised(model, params, lora, scale, tokenizer, data_path, n_val, rng_seed=0):
-    """Exact-call accuracy of the held-out split under the export's numerics.
+def _score_quantised(model, params, lora, scale, tokenizer, examples):
+    """Exact-call accuracy on held-out examples under the export's numerics.
 
     The float model is not what ships: `needle build` writes CQ W4 weights, so a
     fine-tune is scored through the same quantisation the archive uses.
@@ -367,21 +389,18 @@ def _score_quantised(model, params, lora, scale, tokenizer, data_path, n_val, rn
     from needle.model.run import generate
     from needle.model.quantize import cq_ste_params, WEIGHT_BITS
 
-    examples = list(read_examples(data_path))
     if not examples:
         return 0, 0
-    order = np.random.default_rng(rng_seed).permutation(len(examples))
-    held = [examples[i] for i in order[:n_val]]
     merged = cq_ste_params(merge_lora(params, lora, scale), WEIGHT_BITS)
     correct = 0
-    for example in held:
+    for example in examples:
         prompt, _ = render_example({**example, "answers": []})
         text = generate(model, merged, tokenizer, prompt, max_new_tokens=96,
                         temperature=0.0, stream=False)
         want = _calls_of(TOOL_CALL_START + json.dumps(
             example.get("answers", []), separators=(",", ":")) + TOOL_CALL_END)
         correct += _calls_of(text) == want
-    return correct, len(held)
+    return correct, len(examples)
 
 
 def finetune_local(args, progress=None):
@@ -416,16 +435,32 @@ def finetune_local(args, progress=None):
     emit(f"  {'depth':<9} {config.num_layers} layers")
     tokenizer = get_tokenizer(config.vocab_size)
     max_len = fit_max_len(data_path, tokenizer, args.max_len)
-    seqs, masks = load_jsonl(data_path, tokenizer, max_len)
+    seqs, masks, examples = load_jsonl(data_path, tokenizer, max_len)
     if len(seqs) == 0:
         raise SystemExit("no usable examples in " + data_path)
     emit(f"  {'data':<9} {len(seqs)} examples  seq_len {max_len}  cap {args.max_len}")
 
+    counts = class_counts(examples)
+    weights = class_weights(examples, counts)
+
+    seed = int(getattr(args, "seed", 0))
+    rng = _training_rng(seed)
     val_path = getattr(args, "val_path", None)
-    val_seqs = val_masks = None
+    val_seqs = val_masks = val_weights = None
+    val_examples: list = []
+    n_val = min(int(len(seqs) * getattr(args, "val_split", 0.1)), len(seqs) - 1)
     if val_path and os.path.exists(val_path):
-        val_seqs, val_masks = load_jsonl(val_path, tokenizer, max_len)
+        val_seqs, val_masks, val_examples = load_jsonl(val_path, tokenizer, max_len)
+        val_weights = class_weights(val_examples, counts)
         emit(f"  {'val':<9} {len(val_seqs)} examples from {os.path.basename(val_path)}")
+    elif n_val > 0:
+        order = rng.permutation(len(seqs))
+        val_examples = [examples[i] for i in order[:n_val]]
+        examples = [examples[i] for i in order[n_val:]]
+        seqs, masks, weights = seqs[order], masks[order], weights[order]
+        val_seqs, val_masks, val_weights = seqs[:n_val], masks[:n_val], weights[:n_val]
+        seqs, masks, weights = seqs[n_val:], masks[n_val:], weights[n_val:]
+        emit(f"  {'holdout':<9} {n_val} examples for validation")
 
     model = SimpleAttentionNetwork(config)
     configure_deploy(act_bits=getattr(config, "act_bits", 8),
@@ -433,8 +468,6 @@ def finetune_local(args, progress=None):
     emit(f"  {'numerics':<9} CQ W{WEIGHT_BITS} STE + A8 (matches export)")
     paths = lora_target_paths(params)
     scale = args.lora_alpha / args.lora_rank
-    seed = int(getattr(args, "seed", 0))
-    rng = _training_rng(seed)
     lora = init_lora(params, paths, args.lora_rank, jax.random.PRNGKey(seed))
     emit(f"  {'lora':<9} rank {args.lora_rank}  alpha {args.lora_alpha:g}  {len(paths)} weight groups")
 
@@ -454,14 +487,6 @@ def finetune_local(args, progress=None):
         })
         emit(f"  {'saved':<9} {tag}  {os.path.basename(path)}")
 
-    n_val = min(int(len(seqs) * getattr(args, "val_split", 0.1)), len(seqs) - 1)
-    if n_val > 0:
-        order = rng.permutation(len(seqs))
-        seqs, masks = seqs[order], masks[order]
-        val_seqs, val_masks = seqs[:n_val], masks[:n_val]
-        seqs, masks = seqs[n_val:], masks[n_val:]
-        emit(f"  {'holdout':<9} {n_val} examples for validation")
-
     batch, count = args.batch_size, len(seqs)
     steps_per_epoch = -(-count // batch)
     total_steps = args.epochs * steps_per_epoch
@@ -473,16 +498,17 @@ def finetune_local(args, progress=None):
     opt_state = optimizer.init(lora)
     emit(f"  {'schedule':<9} {total_steps} steps  warmup {warmup}  cosine decay  clip 1.0  (compiling...)")
 
-    def loss_fn(lora, ids, mask):
+    def loss_fn(lora, ids, mask, weights):
         merged = cq_ste_params(merge_lora(params, lora, scale), WEIGHT_BITS)
         logits = model.apply({"params": merged}, ids, quant=True)
         logits, targets, mask = logits[:, :-1], ids[:, 1:], mask[:, 1:]
         ce = optax.softmax_cross_entropy_with_integer_labels(logits, targets)
-        return (ce * mask).sum() / jnp.maximum(mask.sum(), 1.0)
+        weighted = mask * weights[:, None]
+        return (ce * weighted).sum() / jnp.maximum(weighted.sum(), 1.0)
 
     @jax.jit
-    def train_step(lora, opt_state, ids, mask):
-        loss, grads = jax.value_and_grad(loss_fn)(lora, ids, mask)
+    def train_step(lora, opt_state, ids, mask, weights):
+        loss, grads = jax.value_and_grad(loss_fn)(lora, ids, mask, weights)
         updates, opt_state = optimizer.update(grads, opt_state, lora)
         return optax.apply_updates(lora, updates), opt_state, loss
 
@@ -498,7 +524,8 @@ def finetune_local(args, progress=None):
         for start in range(0, count, batch):
             idx = order[start:start + batch]
             lora, opt_state, loss = train_step(lora, opt_state,
-                                               jnp.asarray(seqs[idx]), jnp.asarray(masks[idx]))
+                                               jnp.asarray(seqs[idx]), jnp.asarray(masks[idx]),
+                                               jnp.asarray(weights[idx]))
             last = float(loss)
             step_i += 1
             if step_i % every == 0:
@@ -508,13 +535,10 @@ def finetune_local(args, progress=None):
         if val_seqs is not None and len(val_seqs):
             current = float(np.mean([
                 float(eval_step(lora, jnp.asarray(val_seqs[i:i + batch]),
-                                jnp.asarray(val_masks[i:i + batch])))
+                                jnp.asarray(val_masks[i:i + batch]),
+                                jnp.asarray(val_weights[i:i + batch])))
                 for i in range(0, len(val_seqs), batch)
             ]))
-        elif n_val > 0:
-            current = float(np.mean([float(eval_step(lora, jnp.asarray(val_seqs[i:i + batch]),
-                                                     jnp.asarray(val_masks[i:i + batch])))
-                                     for i in range(0, n_val, batch)]))
 
         improved = False
         if current is None:
@@ -541,11 +565,10 @@ def finetune_local(args, progress=None):
                  f"val {best_val:.4f}")
             break
 
-    if n_val > 0 and getattr(args, "score", True):
-        correct, total = _score_quantised(model, params, lora, scale, tokenizer,
-                                          data_path, n_val, rng_seed=seed)
+    if getattr(args, "score", True) and val_examples:
+        correct, total = _score_quantised(model, params, lora, scale, tokenizer, val_examples)
         if total:
-            emit(f"  {'accuracy':<9} {correct}/{total} held-out calls exact, scored on the "
+            emit(f"  {'accuracy':<9} {correct}/{total} val calls exact, scored on the "
                  f"W{WEIGHT_BITS} weights the archive ships")
 
     if os.path.exists(best_out) and best_epoch:

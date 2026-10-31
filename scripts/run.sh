@@ -81,13 +81,13 @@ train() {
   bootstrap
   pick_batch
   step "обучаю LoRA: ранг $RANK, $EPOCHS эпох, контекст $MAXLEN, батч $BATCH"
-  note "562 строки обучения, 33 шага на эпоху при батче 16"
-  note "loss печатается каждые несколько шагов, строка epoch — по эпохам"
+  note "валидация по эпохам на data/processed/val.jsonl, чекпоинт после каждой эпохи, ранний стоп по patience"
   local attempt batch="$BATCH"
   for attempt in 1 2 3; do
-    if NEEDLE_TELEMETRY=0 .venv/bin/needle finetune data/processed/train.jsonl \
+    if NEEDLE_TELEMETRY=0 .venv/bin/python scripts/finetune_plus.py data/processed/train.jsonl \
+        --val-path data/processed/val.jsonl \
         --epochs "$EPOCHS" --lora-rank "$RANK" --lora-alpha 32 --batch-size "$batch" \
-        --max-len "$MAXLEN" --val-split 0 --seed 42 \
+        --max-len "$MAXLEN" --seed 42 \
         --out checkpoints/router_lora.safetensors; then
       say "адаптер готов: checkpoints/router_lora.safetensors"
       return 0
