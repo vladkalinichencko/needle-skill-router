@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -17,3 +18,9 @@ SERVICE_PREFIXES = ("<system-reminder>", "Current date:", "Ответ на во�
 
 CODEX_THREADS_DB = Path.home() / ".codex" / "thread_history_1.sqlite"
 CODEX_STATE_DB = Path.home() / ".codex" / "state_5.sqlite"
+
+
+def dump_jsonl(rows: list[dict], path: Path) -> None:
+    with path.open("w", encoding="utf-8") as handle:
+        for row in rows:
+            handle.write(json.dumps(row, ensure_ascii=False) + "\n")

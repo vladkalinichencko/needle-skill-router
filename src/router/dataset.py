@@ -2,10 +2,11 @@ from __future__ import annotations
 
 import json
 import os
+import random
 from collections import Counter
 from pathlib import Path
 
-from router.paths import ARTIFACTS, PROCESSED
+from router.paths import ARTIFACTS, PROCESSED, dump_jsonl
 from router.skills import by_name, normalize_invoked
 from router.text import redact
 from router.turns import load_turns
@@ -59,8 +60,8 @@ def build(skills: list[dict], out_dir: Path = PROCESSED) -> dict:
                 }
             )
 
-    _dump(pairs, out_dir / "dataset.jsonl")
-    _dump(negatives, out_dir / "negatives.jsonl")
+    dump_jsonl(pairs, out_dir / "dataset.jsonl")
+    dump_jsonl(negatives, out_dir / "negatives.jsonl")
 
     per_class = Counter(pair["skill"] for pair in pairs)
     summary = {
@@ -80,6 +81,8 @@ def build(skills: list[dict], out_dir: Path = PROCESSED) -> dict:
 
 
 QUERY_LIMIT = int(os.environ.get("ROUTER_QUERY_LIMIT", "1200"))
+NEGATIVE_SAMPLES = int(os.environ.get("ROUTER_NEGATIVES", "300"))
+NEGATIVE_SEED = 42
 
 
 def clip_query(text: str, limit: int | None = None) -> tuple[str, bool]:
@@ -103,33 +106,54 @@ def to_needle(pairs_path: Path | None = None, out_dir: Path = PROCESSED) -> Path
     for row in rows:
         grouped.setdefault((row["session_id"], row["turn_index"]), []).append(row)
 
+    needle_rows = []
+    for (session_id, turn_index), group in grouped.items():
+        answers = [{"name": by_skill[row["skill"]], "arguments": {}} for row in group]
+        query, clipped = clip_query(group[0]["query"])
+        needle_rows.append(
+            {
+                "query": query,
+                "tools": tools,
+                "answers": answers,
+                "meta": {
+                    "session_id": session_id,
+                    "turn_index": turn_index,
+                    "lang": group[0]["lang"],
+                    "source": group[0]["source"],
+                    "clipped": clipped,
+                },
+            }
+        )
+    for row in _sample_negatives(out_dir):
+        query, clipped = clip_query(row["query"])
+        needle_rows.append(
+            {
+                "query": query,
+                "tools": tools,
+                "answers": [],
+                "meta": {
+                    "session_id": row["session_id"],
+                    "turn_index": row["turn_index"],
+                    "lang": row["lang"],
+                    "source": row["source"],
+                    "clipped": clipped,
+                    "negative": True,
+                },
+            }
+        )
+
     path = out_dir / "needle.jsonl"
-    with path.open("w", encoding="utf-8") as handle:
-        for (session_id, turn_index), group in grouped.items():
-            answers = [{"name": by_skill[row["skill"]], "arguments": {}} for row in group]
-            query, clipped = clip_query(group[0]["query"])
-            handle.write(
-                json.dumps(
-                    {
-                        "query": query,
-                        "tools": tools,
-                        "answers": answers,
-                        "meta": {
-                            "session_id": session_id,
-                            "turn_index": turn_index,
-                            "lang": group[0]["lang"],
-                            "source": group[0]["source"],
-                            "clipped": clipped,
-                        },
-                    },
-                    ensure_ascii=False,
-                )
-                + "\n"
-            )
+    dump_jsonl(needle_rows, path)
     return path
 
 
-def _dump(rows: list[dict], path: Path) -> None:
-    with path.open("w", encoding="utf-8") as handle:
-        for row in rows:
-            handle.write(json.dumps(row, ensure_ascii=False) + "\n")
+def _sample_negatives(out_dir: Path) -> list[dict]:
+    path = out_dir / "negatives.jsonl"
+    if not path.exists():
+        return []
+    negatives = [
+        json.loads(line)
+        for line in path.read_text(encoding="utf-8").split("\n")
+        if line.strip()
+    ]
+    return random.Random(NEGATIVE_SEED).sample(negatives, min(NEGATIVE_SAMPLES, len(negatives)))

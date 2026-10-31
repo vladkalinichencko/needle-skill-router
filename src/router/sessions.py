@@ -160,11 +160,6 @@ def parse_codex(path: Path) -> dict:
     return dialogue
 
 
-def iter_source(paths: list[Path], parser) -> Iterator[dict]:
-    for path in paths:
-        yield parser(path)
-
-
 def claude_files(root: Path = CLAUDE_PROJECTS) -> list[Path]:
     return sorted(root.rglob("*.jsonl"))
 

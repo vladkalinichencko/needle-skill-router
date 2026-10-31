@@ -55,12 +55,3 @@ def write_turns(turns: list[dict], out_dir: Path = PROCESSED) -> Path:
 def load_turns(path: Path | None = None, out_dir: Path = PROCESSED) -> list[dict]:
     path = path or out_dir / "turns.jsonl"
     return [json.loads(line) for line in path.read_text(encoding="utf-8").split("\n") if line.strip()]
-
-
-def build(out_dir: Path = PROCESSED) -> list[dict]:
-    from router.sessions import load_all
-
-    turns: list[dict] = []
-    for dialogue in load_all(out_dir / ".." / "raw" / "dialogues"):
-        turns.extend(from_dialogue(dialogue))
-    return turns

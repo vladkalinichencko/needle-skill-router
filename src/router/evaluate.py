@@ -21,12 +21,15 @@ def run(
 ) -> dict:
     router = Router(weights=weights)
     rows = _rows(data_path or out_dir / "val.jsonl")
+    # негативные строки val (answers == []) меряются refusal_rate ниже,
+    # exact_match остаётся метрикой роутинга по позитивным строкам
+    positives = [row for row in rows if row["answers"]]
     negatives = _rows(out_dir / "negatives.jsonl")
 
     hits = defaultdict(lambda: {"support": 0, "hit": 0})
     exact = 0
     wrong = []
-    for row in rows:
+    for row in positives:
         expected = [answer["name"] for answer in row["answers"]]
         result = router.predict(row["query"])
         predicted = result["calls"]
@@ -46,8 +49,9 @@ def run(
             refused += 1
 
     return {
-        "examples": len(rows),
-        "exact_match": round(exact / len(rows), 4) if rows else 0.0,
+        "examples": len(positives),
+        "negatives_in_val": len(rows) - len(positives),
+        "exact_match": round(exact / len(positives), 4) if positives else 0.0,
         "negatives_checked": min(len(negatives), negatives_limit),
         "refusal_rate": round(refused / min(len(negatives), negatives_limit), 4) if negatives else None,
         "per_class": {

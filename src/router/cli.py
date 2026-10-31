@@ -118,7 +118,7 @@ def main(argv: list[str] | None = None) -> None:
         parser_.set_defaults(func=func)
         if name == "eval":
             parser_.add_argument("--weights")
-            parser_.add_argument("--negatives", type=int, default=60)
+            parser_.add_argument("--negatives", type=int, default=300)
             parser_.add_argument("--min-confidence", type=float)
             parser_.add_argument("--out")
 

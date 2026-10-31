@@ -2,10 +2,10 @@ from __future__ import annotations
 
 import json
 import random
-from collections import defaultdict
+from collections import Counter, defaultdict
 from pathlib import Path
 
-from router.paths import PROCESSED
+from router.paths import PROCESSED, dump_jsonl
 
 SEED = 42
 VAL_SHARE = 0.1
@@ -21,19 +21,62 @@ def _tokenizer():
     return get_tokenizer(config.vocab_size)
 
 
-def _lengths(rows: list[dict]) -> list[int]:
-    from needle.model.finetune import render_example
-    from needle.model.run import load_checkpoint
-    from needle.model.tokenizer import get_tokenizer
+def _answers(row: dict) -> set[str]:
+    return {answer["name"] for answer in row["answers"]}
 
-    from router.paths import ROOT
 
-    params, config = load_checkpoint(str(ROOT / "checkpoints" / "needle3.safetensors"))
-    tokenizer = get_tokenizer(config.vocab_size)
-    return [
-        len(tokenizer.encode(render_example(row)[0])) + len(tokenizer.encode(render_example(row)[1])) + 2
-        for row in rows
-    ]
+def _stratify(rows: list[dict], seed: int, val_share: float) -> tuple[list[dict], list[dict], int]:
+    by_session: dict[str, list[dict]] = defaultdict(list)
+    for row in rows:
+        by_session[row["meta"]["session_id"]].append(row)
+
+    session_classes = {
+        session: set().union(*(_answers(row) for row in session_rows))
+        for session, session_rows in by_session.items()
+    }
+    class_sessions: dict[str, set[str]] = defaultdict(set)
+    for session, classes in session_classes.items():
+        for cls in classes:
+            class_sessions[cls].add(session)
+
+    rng = random.Random(seed)
+    sessions = sorted(by_session)
+    rng.shuffle(sessions)
+
+    # класс, чьи пары живут в одной сессии, весь уходит в train: иначе train его не увидит
+    locked = {s for class_sessions_ in class_sessions.values() if len(class_sessions_) == 1 for s in class_sessions_}
+
+    val_sessions: set[str] = set()
+
+    def orphans(session: str) -> bool:
+        return any(
+            class_sessions[cls] <= val_sessions | {session}
+            for cls in session_classes[session]
+        )
+
+    # каждому классу с парой в нескольких сессиях — одна сессия в val, начиная с редких
+    class_rows = Counter(cls for row in rows for cls in _answers(row))
+    for cls in sorted(class_rows, key=lambda c: (class_rows[c], c)):
+        candidates = [
+            s for s in class_sessions[cls]
+            if s not in locked and s not in val_sessions and not orphans(s)
+        ]
+        if candidates:
+            val_sessions.add(min(candidates, key=lambda s: (len(by_session[s]), s)))
+
+    target = int(len(rows) * val_share)
+    taken = sum(len(by_session[s]) for s in val_sessions)
+    for session in sessions:
+        if taken >= target:
+            break
+        if session in locked or session in val_sessions or orphans(session):
+            continue
+        val_sessions.add(session)
+        taken += len(by_session[session])
+
+    train_rows = [row for row in rows if row["meta"]["session_id"] not in val_sessions]
+    val_rows = [row for row in rows if row["meta"]["session_id"] in val_sessions]
+    return train_rows, val_rows, len(val_sessions)
 
 
 def split(
@@ -66,38 +109,20 @@ def split(
             truncated += int(cut)
         rows = fixed
 
-    by_session: dict[str, list[dict]] = defaultdict(list)
-    for row in rows:
-        by_session[row["meta"]["session_id"]].append(row)
+    train_rows, val_rows, n_val_sessions = _stratify(rows, seed, val_share)
 
-    sessions = sorted(by_session)
-    random.Random(seed).shuffle(sessions)
-
-    target = int(len(rows) * val_share)
-    val_sessions: set[str] = set()
-    taken = 0
-    for session in sessions:
-        if taken >= target:
-            break
-        val_sessions.add(session)
-        taken += len(by_session[session])
-
-    train_rows = [row for row in rows if row["meta"]["session_id"] not in val_sessions]
-    val_rows = [row for row in rows if row["meta"]["session_id"] in val_sessions]
-
-    _dump(train_rows, out_dir / "train.jsonl")
-    _dump(val_rows, out_dir / "val.jsonl")
+    dump_jsonl(train_rows, out_dir / "train.jsonl")
+    dump_jsonl(val_rows, out_dir / "val.jsonl")
+    train_classes = set().union(*(_answers(row) for row in train_rows))
+    val_classes = set().union(*(_answers(row) for row in val_rows))
     return {
         "train": len(train_rows),
         "val": len(val_rows),
-        "val_sessions": len(val_sessions),
+        "val_sessions": n_val_sessions,
+        "classes_train": len(train_classes),
+        "classes_val": len(val_classes),
+        "classes_val_only": sorted(val_classes - train_classes),
         "truncated_middle": truncated,
         "max_tokens": max_tokens,
         "seed": seed,
     }
-
-
-def _dump(rows: list[dict], path: Path) -> None:
-    with path.open("w", encoding="utf-8") as handle:
-        for row in rows:
-            handle.write(json.dumps(row, ensure_ascii=False) + "\n")
